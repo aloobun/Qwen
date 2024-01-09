@@ -1,3 +1,37 @@
+Requirements:
+```
+pip install accelerate deepspeed transformers==4.32.0 peft pydantic==1.10.13 transformers_stream_generator einops tiktoken datasets
+```
+
+Finetune:
+```
+torchrun --nproc_per_node 2 --nnodes 1 --node_rank 0 --master_addr localhost --master_port 6001 finetune.py \
+    --model_name_or_path Qwen-1_8B-Chat \
+    --data_path your_data.json \
+    --fp16 True \
+    --output_dir output_qwen \
+    --num_train_epochs 1 \
+    --per_device_train_batch_size 2 \
+    --per_device_eval_batch_size 1 \
+    --gradient_accumulation_steps 8 \
+    --evaluation_strategy "no" \
+    --save_strategy "steps" \
+    --save_steps 1000 \
+    --save_total_limit 10 \
+    --learning_rate 3e-4 \
+    --weight_decay 0.1 \
+    --adam_beta2 0.95 \
+    --warmup_ratio 0.01 \
+    --lr_scheduler_type "cosine" \
+    --logging_steps 1 \
+    --report_to "none" \
+    --model_max_length 128 \
+    --lazy_preprocess True \
+    --use_lora \
+    --gradient_checkpointing \
+    --deepspeed finetune/ds_config_zero3.json 
+```
+
 <p align="left">
     <a href="README_CN.md">中文</a>&nbsp ｜ &nbspEnglish&nbsp ｜ &nbsp<a href="README_JA.md">日本語</a> ｜ &nbsp<a href="README_FR.md">Français</a> ｜ &nbsp<a href="README_ES.md">Español</a>
 </p>
